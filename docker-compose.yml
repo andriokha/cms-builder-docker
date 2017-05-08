@@ -1,0 +1,48 @@
+
+# TODO: Look at decoupling from user 33, at least for tests (where files don't
+#   need to be shared with the host).
+# TODO: known_hosts shouldn't really be in this repo, but it gets us going
+#   quicker.
+
+version: '3'
+
+services:
+  php:
+    build:
+      context: images
+      args:
+        user: ${CMS_BUILDER_USER:-www-data}
+        docker_version: 17.03.1~ce-0~debian-jessie # https://download.docker.com/linux/debian/dists/jessie/pool/stable/amd64/
+        docker_compose_version: 1.13.0 # See https://github.com/docker/compose/releases
+#        xdebug_version: 2.5.3
+        phantomjs_version: 2.1.1
+        # Composer 1.4.1
+        composer_hash: a68fc08d2de42237ae80d77e8dd44488d268e13d
+        selenium_version: 3.3.1 # http://selenium-release.storage.googleapis.com/index.html
+        selenium_version_abbrev: 3.3 # I don't know how to slice strings in docker-compose
+        geckodriver_version: 0.15.0 # https://github.com/mozilla/geckodriver/releases
+        chromedriver_version: 2.29
+        platform_version: 3.15.4
+    command: initial_setup
+    environment:
+      - REPO_URL
+      - REPO_BRANCH
+      - CMS_BUILDER_DOCKER=1
+      - PROJECT_ROOT=$CMS_BUILDER_PROJECT_ROOT
+      - CMS_BUILDER_DEFAULT_SITE=${CMS_BUILDER_SITE}
+
+    # The generated docker-compose.yml file is version 1, so join the default
+    # bridge network for access.
+    network_mode: bridge
+
+    volumes:
+      - "$CMS_BUILDER_PROJECT_ROOT:$CMS_BUILDER_PROJECT_ROOT"
+      # Don't store the keys in source control.
+      - "$SSH_KEY_FILE:/home/${CMS_BUILDER_USER:-www-data}/.ssh/id_rsa"
+      - "./conf/known_hosts:/home/${CMS_BUILDER_USER:-www-data}/.ssh/known_hosts"
+      - './scripts/run-tests.sh:/usr/local/bin/run-tests'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+
+      # Debug
+      # - 'path/to/cms-builder/on/host:/opt/cms-builder
+      - '../cms-builder:/opt/cms-builder'
