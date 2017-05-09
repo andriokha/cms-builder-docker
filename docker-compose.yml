@@ -45,4 +45,3 @@ services:
 
       # Debug
       # - 'path/to/cms-builder/on/host:/opt/cms-builder
-      - '../cms-builder:/opt/cms-builder'
