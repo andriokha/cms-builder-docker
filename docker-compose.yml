@@ -3,6 +3,7 @@
 #   need to be shared with the host).
 # TODO: known_hosts shouldn't really be in this repo, but it gets us going
 #   quicker.
+# TODO: Move package versions outside this file.
 
 version: '3'
 
@@ -12,6 +13,7 @@ services:
       context: images
       args:
         user: ${CMS_BUILDER_USER:-www-data}
+        cms_builder_hash: 038087d3e0ce91479aaa3f85d9e680ebdd68e761 # https://github.com/tes/cms-builder/commits
         docker_version: 17.03.1~ce-0~debian-jessie # https://download.docker.com/linux/debian/dists/jessie/pool/stable/amd64/
         docker_compose_version: 1.13.0 # See https://github.com/docker/compose/releases
 #        xdebug_version: 2.5.3
@@ -23,7 +25,7 @@ services:
         geckodriver_version: 0.15.0 # https://github.com/mozilla/geckodriver/releases
         chromedriver_version: 2.29
         platform_version: 3.15.4
-    command: initial_setup
+    command: run-tests
     environment:
       - REPO_URL
       - REPO_BRANCH

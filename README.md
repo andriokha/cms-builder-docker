@@ -51,7 +51,7 @@ cd cms-builder-docker
 mkdir test
 sudo chown 33:33 test
 cat << ENV > .env
-SSH_KEY_FILE={{path to private key}}
+SSH_KEY_FILE={{path to deployment private key}}
 CMS_BUILDER_PROJECT_ROOT={{path to project root}}
 CMS_BUILDER_SITE={{site to build}}
 REPO_URL={{repo url}
