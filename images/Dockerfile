@@ -98,7 +98,8 @@ RUN apt-get update && \
   usermod -a -G ${DOCKER_USER:-docker} $user && \
   # Install docker-compose
   curl -LSs https://github.com/docker/compose/releases/download/$docker_compose_version/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
-  chmod +x /usr/local/bin/docker-compose
+  chmod +x /usr/local/bin/docker-compose && \
+  apt-get remove --purge -y $BUILD_PACKAGES $(apt-mark showauto) && rm -rf /var/lib/apt/lists/
 
 ## Setup xdebug
 #RUN pecl install xdebug-$xdebug_version && \
